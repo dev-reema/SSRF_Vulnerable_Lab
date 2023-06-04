@@ -84,10 +84,25 @@ if(isset($_POST['load']))
 if(isset($_POST['upload']))
 {
 
-$xmlfile    = $_FILES['file']['tmp_name'];
-libxml_disable_entity_loader (false);
+    // $xmlfile    = $_FILES['file']['tmp_name'];
+    // libxml_disable_entity_loader (true);
 
-$crew= simplexml_load_file($xmlfile, 'SimpleXMLElement', LIBXML_NOENT) or die("Cannot create XML object");
+    // $crew= simplexml_load_file($xmlfile, 'SimpleXMLElement', LIBXML_NOENT) or die("Cannot create XML object");
+
+    $xmlfile = $_FILES['file']['tmp_name'];
+
+    // Create a new XMLReader instance
+    $reader = new XMLReader();
+    $reader->open($xmlfile);
+
+    // Disable external entity processing
+    $reader->setParserProperty(XMLReader::FEATURE_LOAD_EXTERNAL_DTD, false);
+
+    // Use SimpleXML to process the XML data
+    $crew = simplexml_import_dom($reader);
+
+    // Close the XMLReader
+    $reader->close();
 
 
 $crewList  = '<h2 align="center">White Beard Pirate crew members</h2>';
